@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "CellularAutomata"
 include(":app")
- 
+include(":cellular")
