@@ -1,10 +1,13 @@
 package com.iostyle.cellularautomata.playground
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
 import com.iostyle.cellular.bean.IAtom
@@ -25,6 +28,13 @@ class BasePlayground @JvmOverloads constructor(
 
     private val data = mutableListOf<IAtom>()
 
+    var callback: Callback? = null
+
+    interface Callback {
+        fun click(clickLocation: IUniverse.Coordinate)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun bind(universe: Universe) {
         widthSize = universe.width
         heightSize = universe.height
@@ -37,6 +47,18 @@ class BasePlayground @JvmOverloads constructor(
                 viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
+
+        setOnTouchListener { view, motionEvent ->
+            when (motionEvent.action) {
+                MotionEvent.ACTION_UP -> {
+                    val clickLocation = getClickLocation(motionEvent.x.toInt(), motionEvent.y.toInt()).also {
+                        Log.d("touch up", "${it.x} ${it.y}")
+                    }
+                    callback?.click(clickLocation)
+                }
+            }
+            true
+        }
     }
 
     private val gridPaint = Paint().apply {

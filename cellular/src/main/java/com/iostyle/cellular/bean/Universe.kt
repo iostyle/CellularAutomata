@@ -82,4 +82,19 @@ abstract class Universe : IUniverse {
             objects.add(Atom.born(coordinate))
         return getCurrentAtoms()
     }
+
+    override fun addOrRemoveAtom(coordinate: IUniverse.Coordinate): MutableList<IAtom> {
+        val iterator = objects.iterator()
+        var has = false
+        while (iterator.hasNext()) {
+            val item = iterator.next()
+            if (item.coordinate.equals(coordinate)) {
+                has = true
+                iterator.remove()
+                break
+            }
+        }
+        if(!has) objects.add(Atom.born(coordinate))
+        return getCurrentAtoms()
+    }
 }

@@ -1,9 +1,5 @@
 package com.iostyle.cellular.bean
 
-import com.iostyle.cellular.extension.getNeighbor
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.withContext
 import java.util.Objects
 
 /**
@@ -43,6 +39,8 @@ interface IUniverse {
      * 手动孵化一个原子
      */
     fun addAtom(coordinate: Coordinate): MutableList<IAtom>
+
+    fun addOrRemoveAtom(coordinate: Coordinate): MutableList<IAtom>
 
     /**
      * 获取当前原子集合
