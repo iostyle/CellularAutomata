@@ -13,10 +13,10 @@
         android:theme="@style/Theme.CellularAutomata"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.PreviewActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.CellularAutomata">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

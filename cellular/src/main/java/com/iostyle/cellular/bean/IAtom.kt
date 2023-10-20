@@ -13,5 +13,6 @@ interface IAtom {
 
     fun onDie()
 
+    var coordinate: IUniverse.Coordinate
 
 }

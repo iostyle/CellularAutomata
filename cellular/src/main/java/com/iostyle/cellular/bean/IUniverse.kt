@@ -4,6 +4,7 @@ import com.iostyle.cellular.extension.getNeighbor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
+import java.util.Objects
 
 /**
  * 出生：一个空格周围有3个人，诞生新生命
@@ -34,22 +35,18 @@ interface IUniverse {
         }
 
         override fun hashCode(): Int {
-            return super.hashCode()
-            // TODO
-
+            return Objects.hash(x,y)
         }
     }
 
-    // 为原子扩展坐标方法
-    var IAtom.coordinate: Coordinate
-        set(value) {
-            coordinate = value
-        }
-        get() {
-            return coordinate
-        }
+    /**
+     * 手动孵化一个原子
+     */
+    fun addAtom(coordinate: Coordinate): MutableList<IAtom>
 
-
-
+    /**
+     * 获取当前原子集合
+     */
+    fun getCurrentAtoms(): MutableList<IAtom>
 
 }

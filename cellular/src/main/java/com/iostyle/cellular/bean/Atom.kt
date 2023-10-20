@@ -1,10 +1,10 @@
 package com.iostyle.cellular.bean
 
-class Atom : IAtom {
+class Atom(override var coordinate: IUniverse.Coordinate) : IAtom {
 
     companion object {
-        fun born(): IAtom {
-            return Atom()
+        fun born(coordinate: IUniverse.Coordinate): IAtom {
+            return Atom(coordinate)
 //                .also { it.onBorn() }
         }
     }
@@ -17,4 +17,5 @@ class Atom : IAtom {
 
     override fun onDie() {
     }
+
 }
