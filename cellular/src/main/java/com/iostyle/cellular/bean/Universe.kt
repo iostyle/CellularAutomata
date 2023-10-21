@@ -35,7 +35,6 @@ abstract class Universe : IUniverse {
                             neighborSize++
                         } else {
                             // 需要探测是否新生的坐标
-                            // TODO 去重
                             anchorTemp.add(it)
                         }
                     }

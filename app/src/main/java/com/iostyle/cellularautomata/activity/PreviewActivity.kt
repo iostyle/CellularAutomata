@@ -12,6 +12,9 @@ import com.iostyle.cellularautomata.R
 import com.iostyle.cellularautomata.databinding.ActivityPreviewBinding
 import com.iostyle.cellularautomata.playground.BasePlayground
 import com.iostyle.cellularautomata.universes.FirstUniverse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PreviewActivity : AppCompatActivity() {
@@ -19,6 +22,7 @@ class PreviewActivity : AppCompatActivity() {
     private val universe = FirstUniverse()
     private val objectsLiveData = MutableLiveData<MutableList<IAtom>>()
     private lateinit var binding: ActivityPreviewBinding
+    private var autoJob: Job? = null
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +43,26 @@ class PreviewActivity : AppCompatActivity() {
         }
 
         binding.metabolismButton.setOnClickListener {
-            lifecycleScope.launch {
-                objectsLiveData.postValue(universe.metabolism())
+            metabolism()
+        }
+
+        binding.autoMetabolismButton.setOnClickListener {
+            if (autoJob?.isActive == true) {
+                autoJob?.cancel()
+            } else {
+                autoJob = lifecycleScope.launch(Dispatchers.IO) {
+                    while (true) {
+                        delay(500)
+                        metabolism()
+                    }
+                }
             }
+        }
+    }
+
+    private fun metabolism() {
+        lifecycleScope.launch {
+            objectsLiveData.postValue(universe.metabolism())
         }
     }
 }

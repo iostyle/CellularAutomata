@@ -24,7 +24,7 @@ class BasePlayground @JvmOverloads constructor(
     private var itemWidth: Float = 0f
     private var itemHeight: Float = 0f
 
-    private var itemPadding = 15f
+    private var itemPadding = 5f
 
     private val data = mutableListOf<IAtom>()
 
