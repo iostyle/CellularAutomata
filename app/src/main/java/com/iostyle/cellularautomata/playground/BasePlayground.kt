@@ -36,11 +36,13 @@ class BasePlayground @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun bind(universe: Universe) {
-        widthSize = universe.width
-        heightSize = universe.height
+
 
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
+                widthSize = width / universe.cellSize
+                heightSize = height / universe.cellSize
+
                 itemWidth = (width / widthSize).toFloat()
                 itemHeight = (height / heightSize).toFloat()
                 postInvalidate()
@@ -80,6 +82,7 @@ class BasePlayground @JvmOverloads constructor(
     }
 
     override fun getClickLocation(x: Int, y: Int): IUniverse.Coordinate {
+        Log.d("click", "$x $y ${itemWidth} ${itemHeight} ${(x / itemWidth.toInt())}  ${(y / itemHeight.toInt())}")
         return IUniverse.Coordinate((x / itemWidth.toInt()), (y / itemHeight.toInt()))
     }
 

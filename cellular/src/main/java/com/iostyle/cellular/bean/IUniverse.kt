@@ -18,8 +18,7 @@ interface IUniverse {
      *      #   #   #
      */
 
-    val width: Int
-    val height: Int
+    val cellSize: Int
 
     data class Coordinate(val x: Int, val y: Int) {
         override fun equals(other: Any?): Boolean {
@@ -31,7 +30,7 @@ interface IUniverse {
         }
 
         override fun hashCode(): Int {
-            return Objects.hash(x,y)
+            return Objects.hash(x, y)
         }
     }
 
