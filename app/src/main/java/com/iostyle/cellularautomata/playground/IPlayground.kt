@@ -10,4 +10,11 @@ interface IPlayground {
     fun resetData(data: MutableList<IAtom>)
 
     fun getClickLocation(x: Int, y: Int): IUniverse.Coordinate
+
+    interface PlaygroundCallback{
+        fun onRenderBlank()
+        fun onClickCoordinate(coordinate: IUniverse.Coordinate)
+    }
+
+    fun bindCallback(callback: PlaygroundCallback)
 }

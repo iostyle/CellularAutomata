@@ -28,11 +28,7 @@ class BasePlayground @JvmOverloads constructor(
 
     private val data = mutableListOf<IAtom>()
 
-    var callback: Callback? = null
-
-    interface Callback {
-        fun click(clickLocation: IUniverse.Coordinate)
-    }
+    var callback: IPlayground.PlaygroundCallback? = null
 
     @SuppressLint("ClickableViewAccessibility")
     override fun bind(universe: Universe) {
@@ -56,7 +52,7 @@ class BasePlayground @JvmOverloads constructor(
                     val clickLocation = getClickLocation(motionEvent.x.toInt(), motionEvent.y.toInt()).also {
                         Log.d("touch up", "${it.x} ${it.y}")
                     }
-                    callback?.click(clickLocation)
+                    callback?.onClickCoordinate(clickLocation)
                 }
             }
             true
@@ -86,6 +82,10 @@ class BasePlayground @JvmOverloads constructor(
         return IUniverse.Coordinate((x / itemWidth.toInt()), (y / itemHeight.toInt()))
     }
 
+    override fun bindCallback(callback: IPlayground.PlaygroundCallback) {
+        this.callback = callback
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
@@ -105,12 +105,20 @@ class BasePlayground @JvmOverloads constructor(
             canvas.drawLine(0f, y, screenWidth, y, gridPaint)
         }
 
-
+        var has = false
         // draw item
         data.forEach {
             it.coordinate.apply {
+                if (!has) {
+                    if (x in 0..widthSize && x in 0..heightSize) {
+                        has = true
+                    }
+                }
                 canvas.drawCircle(x * columnGap + (itemWidth / 2), y * rowGap + (itemHeight / 2), itemWidth / 2f - itemPadding, atomPaint)
             }
+        }
+        if(!has){
+            callback?.onRenderBlank()
         }
     }
 

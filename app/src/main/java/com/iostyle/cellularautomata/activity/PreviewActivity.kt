@@ -10,7 +10,7 @@ import com.iostyle.cellular.bean.IAtom
 import com.iostyle.cellular.bean.IUniverse
 import com.iostyle.cellularautomata.R
 import com.iostyle.cellularautomata.databinding.ActivityPreviewBinding
-import com.iostyle.cellularautomata.playground.BasePlayground
+import com.iostyle.cellularautomata.playground.IPlayground
 import com.iostyle.cellularautomata.universes.FirstUniverse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,6 +23,7 @@ class PreviewActivity : AppCompatActivity() {
     private val objectsLiveData = MutableLiveData<MutableList<IAtom>>()
     private lateinit var binding: ActivityPreviewBinding
     private var autoJob: Job? = null
+    private val autoState = MutableLiveData(false)
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,10 +32,14 @@ class PreviewActivity : AppCompatActivity() {
 
         binding.playground.apply {
             bind(universe)
-            callback = object : BasePlayground.Callback {
-                override fun click(clickLocation: IUniverse.Coordinate) {
+            callback = object : IPlayground.PlaygroundCallback {
+                override fun onRenderBlank() {
+                    autoJob?.cancel()
+                }
+
+                override fun onClickCoordinate(coordinate: IUniverse.Coordinate) {
                     lifecycleScope.launch {
-                        objectsLiveData.postValue(universe.addOrRemoveAtom(clickLocation))
+                        objectsLiveData.postValue(universe.addOrRemoveAtom(coordinate))
                     }
                 }
             }
@@ -42,6 +47,10 @@ class PreviewActivity : AppCompatActivity() {
 
         objectsLiveData.observe(this) {
             binding.playground.resetData(it)
+        }
+
+        autoState.observe(this) {
+            binding.autoMetabolismButton.text = if (it) "演变中" else "演变"
         }
 
         binding.metabolismButton.setOnClickListener {
@@ -57,7 +66,12 @@ class PreviewActivity : AppCompatActivity() {
                         delay(500)
                         metabolism()
                     }
+                }.also {
+                    it.invokeOnCompletion {
+                        autoState.postValue(false)
+                    }
                 }
+                autoState.postValue(true)
             }
         }
     }
