@@ -33,7 +33,9 @@ class PreviewActivity : AppCompatActivity() {
             bind(universe)
             callback = object : BasePlayground.Callback {
                 override fun click(clickLocation: IUniverse.Coordinate) {
-                    objectsLiveData.postValue(universe.addOrRemoveAtom(clickLocation))
+                    lifecycleScope.launch {
+                        objectsLiveData.postValue(universe.addOrRemoveAtom(clickLocation))
+                    }
                 }
             }
         }

@@ -76,24 +76,32 @@ abstract class Universe : IUniverse {
         return objects
     }
 
-    override fun addAtom(coordinate: IUniverse.Coordinate): MutableList<IAtom> {
-        if (!objects.containsCoordinate(coordinate))
-            objects.add(Atom.born(coordinate))
-        return getCurrentAtoms()
-    }
-
-    override fun addOrRemoveAtom(coordinate: IUniverse.Coordinate): MutableList<IAtom> {
-        val iterator = objects.iterator()
-        var has = false
-        while (iterator.hasNext()) {
-            val item = iterator.next()
-            if (item.coordinate.equals(coordinate)) {
-                has = true
-                iterator.remove()
-                break
+    override suspend fun addAtom(coordinate: IUniverse.Coordinate): MutableList<IAtom> {
+        return withContext(Dispatchers.IO) {
+            metaMuteX.withLock {
+                if (!objects.containsCoordinate(coordinate))
+                    objects.add(Atom.born(coordinate))
+                return@withContext getCurrentAtoms()
             }
         }
-        if(!has) objects.add(Atom.born(coordinate))
-        return getCurrentAtoms()
+    }
+
+    override suspend fun addOrRemoveAtom(coordinate: IUniverse.Coordinate): MutableList<IAtom> {
+        return withContext(Dispatchers.IO) {
+            metaMuteX.withLock {
+                val iterator = objects.iterator()
+                var has = false
+                while (iterator.hasNext()) {
+                    val item = iterator.next()
+                    if (item.coordinate.equals(coordinate)) {
+                        has = true
+                        iterator.remove()
+                        break
+                    }
+                }
+                if (!has) objects.add(Atom.born(coordinate))
+                return@withContext getCurrentAtoms()
+            }
+        }
     }
 }

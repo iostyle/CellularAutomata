@@ -37,9 +37,9 @@ interface IUniverse {
     /**
      * 手动孵化一个原子
      */
-    fun addAtom(coordinate: Coordinate): MutableList<IAtom>
+    suspend fun addAtom(coordinate: Coordinate): MutableList<IAtom>
 
-    fun addOrRemoveAtom(coordinate: Coordinate): MutableList<IAtom>
+    suspend fun addOrRemoveAtom(coordinate: Coordinate): MutableList<IAtom>
 
     /**
      * 获取当前原子集合
