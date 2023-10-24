@@ -8,3 +8,4 @@ https://github.com/iostyle/CellularAutomata/assets/22219146/fc98bdaa-b1ac-474d-a
 ## TODO
 - feature drawer
 - with The Eight Diagrams
+- sensor
