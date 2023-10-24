@@ -9,6 +9,7 @@ https://github.com/iostyle/CellularAutomata/assets/22219146/fc98bdaa-b1ac-474d-a
 - feature drawer
 - with The Eight Diagrams
 - ~sensor~
+- map zoom
 
 ## ISSUES
 - click area
